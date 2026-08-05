@@ -3,3 +3,9 @@ packages:
 
 onlyBuiltDependencies:
   - unrs-resolver
+
+# Forca versoes com patch de seguranca em copias transitivas (audit 2026-08-05)
+overrides:
+  sharp: '>=0.35.0'
+  postcss: '>=8.5.25'
+  dompurify: '>=3.4.12'
