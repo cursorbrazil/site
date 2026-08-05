@@ -20,10 +20,16 @@ const securityHeaders = [
 
 const nextConfig = {
 	async headers() {
+		// HSTS only in production: over plain-HTTP dev servers Safari may still
+		// honor it and pin localhost to HTTPS, breaking every local asset load
+		const headers =
+			process.env.NODE_ENV === 'production'
+				? securityHeaders
+				: securityHeaders.filter((h) => h.key !== 'Strict-Transport-Security');
 		return [
 			{
 				source: '/(.*)',
-				headers: securityHeaders,
+				headers,
 			},
 		];
 	},

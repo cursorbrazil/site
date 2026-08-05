@@ -17,7 +17,9 @@ export function proxy(request: NextRequest) {
 		`object-src 'none'`,
 		`base-uri 'self'`,
 		`form-action 'self'`,
-		`upgrade-insecure-requests`,
+		// upgrade-insecure-requests only in production: on plain-HTTP localhost
+		// Safari honors it and rewrites every asset to https, breaking the page
+		...(process.env.NODE_ENV === 'production' ? [`upgrade-insecure-requests`] : []),
 	].join('; ');
 
 	const requestHeaders = new Headers(request.headers);
