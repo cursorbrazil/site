@@ -68,7 +68,11 @@
 		"allEvents": "All events on Luma",
 		"madeWith": "Made with Cursor by ambassadors worldwide",
 		"joinNext": "Join the next event",
-		"followUs": "Follow Cursor on X"
+		"followUs": "Follow Cursor on X",
+		"templateCreditBefore": "Based on",
+		"templateCreditName": "Cursor Ambassador Evergreen",
+		"templateCreditMid": "by",
+		"templateCreditAuthor": "Luis Romero"
 	},
 	"featured": {
 		"defaultDescription": "Slides, guides, and materials shared by your local Cursor community."

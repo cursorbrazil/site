@@ -68,7 +68,11 @@
 		"allEvents": "Todos os eventos",
 		"madeWith": "Feito com Cursor por embaixadores pelo Brasil",
 		"joinNext": "Participar do próximo evento",
-		"followUs": "Siga o Cursor no X"
+		"followUs": "Siga o Cursor no X",
+		"templateCreditBefore": "Feito com base no",
+		"templateCreditName": "Cursor Ambassador Evergreen",
+		"templateCreditMid": "de",
+		"templateCreditAuthor": "Luis Romero"
 	},
 	"featured": {
 		"defaultDescription": "Slides, guias e materiais compartilhados pela comunidade Cursor no Brasil."

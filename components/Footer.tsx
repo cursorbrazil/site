@@ -49,6 +49,22 @@ const Footer: React.FC<FooterProps> = ({ upcomingEvents = [] }) => {
 								</TextLink>
 							</div>
 							<p className="mt-4 text-xs text-cursor-text-faint">{siteConfig.footerTagline || t('footer.madeWith')}</p>
+							{/* Atribuicao obrigatoria do template (NOTICE / ATTRIBUTION.md) */}
+							<p className="mt-1 text-xs text-cursor-text-faint">
+								{t('footer.templateCreditBefore')}{' '}
+								<TextLink
+									href="https://github.com/luisfer/cursor-ambassador-evergreen"
+									external
+									caret={false}
+									className="align-baseline text-xs font-medium"
+								>
+									{t('footer.templateCreditName')}
+								</TextLink>{' '}
+								{t('footer.templateCreditMid')}{' '}
+								<TextLink href="https://lfrc.me" external caret={false} className="align-baseline text-xs font-medium">
+									{t('footer.templateCreditAuthor')}
+								</TextLink>
+							</p>
 						</div>
 
 						<Button href={joinUrl} external={joinIsExternal || undefined} variant="primary" size="md">
