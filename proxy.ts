@@ -6,7 +6,10 @@ export function proxy(request: NextRequest) {
 
 	const csp = [
 		`default-src 'self'`,
-		`script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://va.vercel-scripts.com`,
+		// unsafe-eval only in dev: React reconstructs callstacks via eval() for debugging
+		`script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://va.vercel-scripts.com${
+			process.env.NODE_ENV === 'production' ? '' : " 'unsafe-eval'"
+		}`,
 		`style-src 'self' 'unsafe-inline'`,
 		`img-src 'self' https://images.unsplash.com https://images.lumacdn.com https://luma.com https://lu.ma https://pbs.twimg.com https://abs.twimg.com data: blob:`,
 		`font-src 'self'`,
