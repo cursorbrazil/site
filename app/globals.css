@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Thasadith:wght@400;700&display=swap');
 @import 'tailwindcss';
 
 @source "../components";
@@ -141,7 +140,6 @@
 	--font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 	--font-cursor: 'CursorGothic', system-ui, sans-serif;
 	--font-bsru: 'BSRU Pro', sans-serif;
-	--font-thai: 'Thasadith', sans-serif;
 
 	--animate-fade-in: fade-in 0.5s ease-out forwards;
 	--animate-slide-up: slide-up 0.5s ease-out forwards;
@@ -253,8 +251,4 @@
 
 @utility font-bsru {
 	font-family: var(--font-bsru);
-}
-
-@utility font-thai {
-	font-family: var(--font-thai);
 }
