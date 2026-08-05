@@ -1,68 +1,60 @@
-# Contributing
+# Contribuindo com o site Cursor Brasil
 
-Thanks for helping improve the Cursor Ambassador Site Template.
+Este repo alimenta o [cursorbrasil.com.br](https://www.cursorbrasil.com.br). Todo conteúdo mora em arquivos TypeScript dentro de `content/`, sem banco de dados e sem CMS: mudou o arquivo, abriu PR, mergeou, foi pro ar. O deploy é automático em cada merge na `main`, e todo PR ganha um preview com URL própria pra você conferir antes.
+
+## O que você NÃO precisa fazer aqui
+
+Eventos futuros. O site puxa sozinho os eventos do calendário Luma de cada capítulo, de hora em hora. Criou o evento no Luma do seu capítulo, ele aparece no site sem tocar em código.
 
 ## Setup
 
-1. Fork this repository.
-2. Clone your fork.
-3. Install dependencies:
+Precisa de Node 22+ e pnpm 10.
 
-   ```bash
-   pnpm install
-   ```
+```bash
+git clone git@github.com:cursorbrazil/site.git
+cd site
+pnpm install
+cp .env.example .env.local
+pnpm dev
+```
 
-4. Copy environment defaults:
+Site em http://localhost:3000.
 
-   ```bash
-   cp .env.example .env.local
-   ```
+## Receitas
 
-5. Start development:
+### Publicar o recap de um evento
 
-   ```bash
-   pnpm dev
-   ```
+1. Coloque as fotos em `public/images/events/`. Use nomes novos e descritivos com data, tipo `recife-2026-07-01.jpg`. Nunca reaproveite um nome de arquivo existente trocando o conteúdo: o cache de imagens serve a versão antiga pra sempre.
+2. Copie `content/recaps/example-event.ts` pra um arquivo novo (ex.: `recife-2026-07.ts`), troque o slug e preencha. Todas as seções (palestrantes, projetos, destaques, links) são opcionais.
+3. Registre o recap em `content/recaps/index.ts`.
+4. Em `content/events.ts`, adicione (ou edite) a entrada do evento com `status: 'past'`, `thumbnail`, `galleryImages` (2 fotos viram colagem no card) e `recapPath: '/recaps/seu-slug'`. Uma entrada manual com a mesma `lumaUrl` do feed substitui a versão automática.
 
-## Making Changes
+### Adicionar fotos ao mosaico do topo
 
-- Keep UI components reusable and presentation-focused.
-- Keep community-specific content in `content/` files.
-- Use TypeScript for all code changes.
-- Keep styling in Tailwind utility classes and existing design tokens.
-- Avoid hardcoding city/community-specific values in `components/`.
+Adicione as fotos em `public/images/events/` e registre em `content/header-photos.ts` com um `alt` descritivo em português. As fotos embaralham diariamente. Depois rode `pnpm validate:bento` pra garantir que o layout fecha.
 
-## Verification
+### Atualizar seu capítulo
 
-Before submitting a PR, run:
+`content/chapters.ts`: organizadores, links de WhatsApp/Instagram, site próprio. Se criar capítulo de um estado novo, adicione a bandeira em `public/images/flags/{uf}.png` (PNG, 168px de largura).
+
+### Entrar como embaixador
+
+`content/ambassadors.ts`, em ordem alfabética por nome. Foto 400x400 em `public/images/ambassadors/`. Links de GitHub, LinkedIn, Instagram e site são opcionais, mas o GitHub ajuda a te acharmos pra dar acesso aqui.
+
+## Antes de abrir o PR
 
 ```bash
 pnpm verify
 ```
 
-This runs format check, lint, typecheck, bento layout validation, and production build.
+Roda formatação, lint, typecheck, validadores de conteúdo e o build de produção. É o mesmo check do CI: se passou local, passa lá.
 
-## Adding optional community tweets
+## Abrindo o PR
 
-1. Add status URLs to `content/community-tweets.ts` (replace the example seed).
-2. Set `sections.communityTweets: true` in `content/site.config.ts`.
-3. Add translation keys under `home.communityTweets*` in each locale JSON if you use i18n.
+1. Crie um branch a partir da `main` (`git checkout -b recap-recife-julho`).
+2. Um assunto por PR: um recap, um ajuste de capítulo. PR pequeno é PR mergeado rápido.
+3. Commits no padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/): `feat(content): recap do meetup Recife de julho`.
+4. Print ou preview URL na descrição quando mudar algo visual.
+5. A `main` é protegida: precisa de 1 aprovação. Depois do merge, o site atualiza em poucos minutos.
 
-Only allowlisted tweet IDs are served by `/api/tweets/[id]`.
-
-## Adding a New Locale
-
-1. Add a new JSON file under `content/locales/`.
-2. Add the locale code to `content/site.config.ts` in `locales`.
-3. Add all translation keys used by components.
-4. Verify language toggle behavior locally.
-
-## Submitting a Pull Request
-
-1. Create a focused branch from `main`.
-2. Keep changes scoped to one concern where possible.
-3. Run `pnpm verify` before submitting.
-4. Open a PR with:
-   - A clear summary
-   - Screenshots for UI changes
-   - Notes on any new config/content fields
+Dúvidas? Chama no grupo dos embaixadores.
