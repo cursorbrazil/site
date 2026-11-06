@@ -14,6 +14,7 @@ export interface CursorEvent {
 	galleryImages?: string[];
 	status: 'upcoming' | 'past';
 	host?: { name: string; logo: string; url?: string };
+	citySlug?: string;
 }
 
 export interface SocialLinks {

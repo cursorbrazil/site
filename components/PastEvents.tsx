@@ -1,112 +1,179 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useMemo, useState } from 'react';
 import type { CursorEvent } from '@/lib/types';
 import { useI18n } from '@/lib/i18n';
-import { cardInteractive, cardTile } from '@/components/ui';
+import { TextLink } from '@/components/ui';
+import { mapCityBySlug } from '@/lib/brazil-map';
+import BrazilEventMap from '@/components/BrazilEventMap';
 
 type PastEventsProps = {
 	events: CursorEvent[];
 };
 
-const PastEventCard: React.FC<{ event: CursorEvent }> = ({ event }) => {
+type ListFilter = 'todos' | 'proximos' | 'passados';
+type CityFilter = 'proximos' | 'passados';
+
+const INITIAL_COUNT = 4;
+const LOAD_STEP = 8;
+
+function byDate(left: CursorEvent, right: CursorEvent, direction: 'asc' | 'desc'): number {
+	const result = (left.date ?? '').localeCompare(right.date ?? '');
+	return direction === 'asc' ? result : -result;
+}
+
+function ordered(events: CursorEvent[]): CursorEvent[] {
+	const upcoming = events.filter((event) => event.status === 'upcoming').sort((a, b) => byDate(a, b, 'asc'));
+	const past = events.filter((event) => event.status === 'past').sort((a, b) => byDate(a, b, 'desc'));
+	return [...upcoming, ...past];
+}
+
+function matchesList(event: CursorEvent, filter: ListFilter): boolean {
+	if (filter === 'proximos') return event.status === 'upcoming';
+	if (filter === 'passados') return event.status === 'past';
+	return true;
+}
+
+const EventRow: React.FC<{ event: CursorEvent }> = ({ event }) => {
 	const { t } = useI18n();
-	// Com fotos de galeria o card vira colagem (1 grande + 1 ou 2 menores).
-	const galleryPair = event.thumbnail ? (event.galleryImages ?? []).slice(0, 2) : [];
-
 	return (
-		<article className={event.thumbnail ? 'grid md:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.9fr)]' : ''}>
-			{event.thumbnail && galleryPair.length > 0 ? (
-				<div className="grid aspect-[16/10] grid-cols-[1.55fr_1fr] grid-rows-2 gap-px overflow-hidden md:aspect-auto md:min-h-[280px]">
-					<div className="relative row-span-2">
-						<Image
-							src={event.thumbnail}
-							alt={event.title}
-							fill
-							className="object-cover"
-							sizes="(max-width: 768px) 62vw, 450px"
-						/>
-					</div>
-					{galleryPair.map((src) => (
-						<div key={src} className={`relative ${galleryPair.length === 1 ? 'row-span-2' : ''}`}>
-							<Image src={src} alt="" fill className="object-cover" sizes="(max-width: 768px) 38vw, 280px" />
-						</div>
-					))}
-				</div>
-			) : event.thumbnail ? (
-				<div className="relative aspect-[16/10] overflow-hidden md:aspect-auto md:min-h-[280px]">
-					<Image
-						src={event.thumbnail}
-						alt={event.title}
-						fill
-						className="object-cover"
-						sizes="(max-width: 768px) 100vw, 720px"
-					/>
-				</div>
-			) : null}
-			<div className="flex flex-col justify-between gap-6 p-6 md:p-8">
-				<div className="flex items-start justify-between gap-4">
-					<div className="min-w-0">
-						<p className="text-sm text-cursor-text-muted">
-							{event.displayDate}
-							{event.attendees ? ` · ${t('home.attendees', { count: String(event.attendees) })}` : ''}
-						</p>
-						<h3 className="mt-2 text-2xl font-normal tracking-tight text-cursor-text">{event.title}</h3>
-						<p className="mt-2 text-sm text-cursor-text-muted">
-							{event.host ? `${event.host.name} · ` : ''}
-							{event.location}
-						</p>
-					</div>
-
-					{event.host?.logo ? (
-						<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-sm border border-cursor-border bg-cursor-bg p-2.5">
-							<Image
-								src={event.host.logo}
-								alt={event.host.name}
-								width={40}
-								height={40}
-								className="h-full w-full object-contain"
-							/>
-						</div>
+		<article className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 border-b border-cursor-border py-4">
+			<div className="min-w-0">
+				<p className="text-xs uppercase tracking-wide text-cursor-text-muted">
+					{event.status === 'upcoming' ? (
+						<span className="text-cursor-accent-orange">{t('home.nextLabel')}</span>
 					) : null}
-				</div>
-				{event.recapPath ? (
-					<p className="text-sm text-cursor-accent-orange">
-						{t('home.viewRecap')} <span aria-hidden="true">→</span>
-					</p>
-				) : null}
+					{event.status === 'upcoming' ? ' · ' : ''}
+					{event.displayDate}
+				</p>
+				<h4 className="mt-1 text-base font-normal tracking-tight text-cursor-text">{event.title}</h4>
 			</div>
+			{event.lumaUrl ? (
+				<TextLink href={event.lumaUrl} external caret={false}>
+					{t('home.luma')}
+				</TextLink>
+			) : null}
 		</article>
 	);
 };
 
+const FilterButton: React.FC<{
+	active: boolean;
+	onClick: () => void;
+	children: React.ReactNode;
+}> = ({ active, onClick, children }) => (
+	<button
+		type="button"
+		onClick={onClick}
+		aria-pressed={active}
+		className={`pb-1 text-sm ${active ? 'border-b border-cursor-text text-cursor-text' : 'text-cursor-text-muted'}`}
+	>
+		{children}
+	</button>
+);
+
 const PastEvents: React.FC<PastEventsProps> = ({ events }) => {
 	const { t } = useI18n();
+	const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+	const [listFilter, setListFilter] = useState<ListFilter>('todos');
+	const [cityFilter, setCityFilter] = useState<CityFilter>('proximos');
+	const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
 
-	if (events.length === 0) {
-		return null;
-	}
+	const list = useMemo(() => ordered(events.filter((event) => matchesList(event, listFilter))), [events, listFilter]);
+	const visible = list.slice(0, visibleCount);
+	const city = selectedSlug ? mapCityBySlug(selectedSlug) : undefined;
+	const cityEvents = useMemo(() => {
+		if (!selectedSlug) return [];
+		return ordered(
+			events.filter(
+				(event) =>
+					event.citySlug === selectedSlug && event.status === (cityFilter === 'proximos' ? 'upcoming' : 'past'),
+			),
+		);
+	}, [events, selectedSlug, cityFilter]);
+
+	if (events.length === 0) return null;
 
 	return (
 		<section id="recaps" className="mb-20 scroll-mt-20">
 			<p className="cursor-eyebrow mb-2">{t('home.pastEvents')}</p>
-			<h2 className="cursor-section-title mb-8 text-cursor-text">{t('home.pastEventsHeading')}</h2>
+			<h2 className="cursor-section-title mb-2 text-cursor-text">{t('home.pastEventsHeading')}</h2>
+			<p className="mb-8 text-sm text-cursor-text-muted">{t('home.pastEventsIntro')}</p>
 
-			<div className="space-y-5">
-				{events.map((event) =>
-					event.recapPath ? (
-						<Link key={event.id} href={event.recapPath} className={`${cardInteractive} group block`}>
-							<PastEventCard event={event} />
-						</Link>
-					) : (
-						<div key={event.id} className={`${cardTile} block`}>
-							<PastEventCard event={event} />
+			<div className={`border border-cursor-border ${city ? 'md:grid md:grid-cols-2' : ''}`}>
+				<BrazilEventMap events={events} selectedSlug={selectedSlug} onSelect={setSelectedSlug} />
+				{city ? (
+					<div className="border-t border-cursor-border p-6 md:border-t-0 md:border-l">
+						<h3 className="text-2xl font-normal tracking-tight text-cursor-text">{city.name}</h3>
+						<div className="mt-4 flex gap-6">
+							<FilterButton active={cityFilter === 'proximos'} onClick={() => setCityFilter('proximos')}>
+								{t('home.filterUpcoming')}
+							</FilterButton>
+							<FilterButton active={cityFilter === 'passados'} onClick={() => setCityFilter('passados')}>
+								{t('home.filterPast')}
+							</FilterButton>
 						</div>
-					),
-				)}
+						<div className="mt-2">
+							{cityEvents.length === 0 ? (
+								<p className="py-6 text-sm text-cursor-text-muted">{t('home.emptyEvents')}</p>
+							) : (
+								cityEvents.map((event) => <EventRow key={event.id} event={event} />)
+							)}
+						</div>
+					</div>
+				) : null}
 			</div>
+
+			<div className="mt-8 flex gap-6">
+				<FilterButton
+					active={listFilter === 'todos'}
+					onClick={() => {
+						setListFilter('todos');
+						setVisibleCount(INITIAL_COUNT);
+					}}
+				>
+					{t('home.filterAll')}
+				</FilterButton>
+				<FilterButton
+					active={listFilter === 'proximos'}
+					onClick={() => {
+						setListFilter('proximos');
+						setVisibleCount(INITIAL_COUNT);
+					}}
+				>
+					{t('home.filterUpcoming')}
+				</FilterButton>
+				<FilterButton
+					active={listFilter === 'passados'}
+					onClick={() => {
+						setListFilter('passados');
+						setVisibleCount(INITIAL_COUNT);
+					}}
+				>
+					{t('home.filterPast')}
+				</FilterButton>
+			</div>
+
+			<div className="mt-2">
+				{visible.map((event) => (
+					<EventRow key={event.id} event={event} />
+				))}
+			</div>
+
+			{visibleCount < list.length ? (
+				<div className="mt-6 flex flex-col items-center gap-3">
+					<button
+						type="button"
+						onClick={() => setVisibleCount((count) => count + LOAD_STEP)}
+						className="border border-cursor-border px-4 py-2 text-sm text-cursor-text-secondary"
+					>
+						{t('home.loadMore')}
+					</button>
+					<p className="text-xs text-cursor-text-muted">
+						{t('home.showingCount', { shown: String(visible.length), total: String(list.length) })}
+					</p>
+				</div>
+			) : null}
 		</section>
 	);
 };

@@ -15,10 +15,11 @@ import LumaCalendarSection from '@/components/LumaCalendar';
 import CommunityTweetsSection from '@/components/CommunityTweetsSection';
 import { siteConfig } from '@/content/site.config';
 import { chapters } from '@/content/chapters';
-import { pastEvents as manualPastEvents, upcomingEvents as manualUpcomingEvents } from '@/content/events';
+import { upcomingEvents as manualUpcomingEvents } from '@/content/events';
+import { getRecapEvents } from '@/lib/recap-events';
 import { worldEventPhotos } from '@/content/world-events';
 import ChaptersSection from '@/components/ChaptersSection';
-import { getAggregatedPastEvents, getAggregatedUpcomingEvents } from '@/lib/events-source';
+import { getAggregatedUpcomingEvents } from '@/lib/events-source';
 import type { CursorEvent } from '@/lib/types';
 import { MarketingColumn, MarketingGrid } from '@/components/layout/MarketingGrid';
 
@@ -86,18 +87,12 @@ export default async function Home() {
 	// A API do Luma nao e documentada; se tudo falhar, a home renderiza com os
 	// eventos manuais de content/events.ts e o build nunca quebra.
 	let upcoming: CursorEvent[] = manualUpcomingEvents;
-	let past: CursorEvent[] = manualPastEvents;
+	const recaps = getRecapEvents();
 	try {
 		const aggregated = await getAggregatedUpcomingEvents();
 		upcoming = aggregated.events;
 	} catch (error) {
 		console.error('[home] upcoming aggregation failed, falling back to manual events', error);
-	}
-	try {
-		const aggregated = await getAggregatedPastEvents();
-		past = aggregated.events;
-	} catch (error) {
-		console.error('[home] past aggregation failed, falling back to manual events', error);
 	}
 
 	return (
@@ -143,13 +138,13 @@ export default async function Home() {
 				<GridSection>
 					<LumaCalendarSection />
 				</GridSection>
-				{past.length > 0 ? (
+				{recaps.length > 0 ? (
 					<>
 						<GridSection>
 							<SectionDivider />
 						</GridSection>
 						<GridSection>
-							<PastEvents events={past} />
+							<PastEvents events={recaps} />
 						</GridSection>
 					</>
 				) : null}
