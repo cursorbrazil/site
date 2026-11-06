@@ -24,14 +24,14 @@ Site em http://localhost:3000.
 
 ### Publicar o recap de um evento
 
-1. Coloque as fotos em `public/images/events/`. Use nomes novos e descritivos com data, tipo `recife-2026-07-01.jpg`. Nunca reaproveite um nome de arquivo existente trocando o conteúdo: o cache de imagens serve a versão antiga pra sempre.
+1. Coloque as fotos do card em `public/images/events/<cidade>/<id-do-evento>/`. `<cidade>` é o token da foto, `aracaju`, `canela`, `floripa`, `rio` ou `sp`, e não o slug do capítulo. `<id-do-evento>` é o `id` em `content/events.ts`. O nome do arquivo continua descritivo e com data, no formato `recife-2026-07-01.jpg`. Um token de cidade novo também entra em `PhotoCity` em `lib/types.ts`. Nunca reaproveite um nome de arquivo existente trocando o conteúdo. O cache de imagens serve a versão antiga pra sempre.
 2. Copie `content/recaps/example-event.ts` pra um arquivo novo (ex.: `recife-2026-07.ts`), troque o slug e preencha. Todas as seções (palestrantes, projetos, destaques, links) são opcionais.
 3. Registre o recap em `content/recaps/index.ts`.
 4. Em `content/events.ts`, adicione (ou edite) a entrada do evento com `status: 'past'`, `thumbnail`, `galleryImages` (2 fotos viram colagem no card) e `recapPath: '/recaps/seu-slug'`. Uma entrada manual com a mesma `lumaUrl` do feed substitui a versão automática.
 
 ### Adicionar fotos ao mosaico do topo
 
-Adicione as fotos em `public/images/events/` e registre em `content/header-photos.ts` com um `alt` descritivo em português. As fotos embaralham diariamente. Depois rode `pnpm validate:bento` pra garantir que o layout fecha.
+Adicione as fotos em `public/images/events/<cidade>/hero/` e registre em `content/header-photos.ts` com um `alt` descritivo em português. Acrescente no fim da lista. Não reordene `headerPhotoPool` e não apague a entrada duplicada de `aracaju-hero-05.jpg`. O embaralhamento depende do índice. Depois rode `pnpm validate:bento`.
 
 ### Atualizar seu capítulo
 
