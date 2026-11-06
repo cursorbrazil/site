@@ -1,4 +1,4 @@
-import type { CursorEvent } from '@/lib/types';
+import type { AggregatedPastEvents, CursorEvent, PastEventWithLocalThumbnail } from '@/lib/types';
 import { chapters } from '@/content/chapters';
 import { pastEvents as manualPastEvents, upcomingEvents as manualUpcomingEvents } from '@/content/events';
 import { siteConfig } from '@/content/site.config';
@@ -29,6 +29,10 @@ function dedupeByLumaUrl(events: CursorEvent[]): CursorEvent[] {
 	}
 
 	return deduped;
+}
+
+function hasLocalThumbnail(event: CursorEvent): event is PastEventWithLocalThumbnail {
+	return typeof event.thumbnail === 'string' && event.thumbnail.startsWith('/');
 }
 
 async function aggregateFromLuma(
@@ -75,11 +79,11 @@ export async function getAggregatedUpcomingEvents(): Promise<AggregatedEvents> {
 	return { events, errors };
 }
 
-export async function getAggregatedPastEvents(): Promise<AggregatedEvents> {
+export async function getAggregatedPastEvents(): Promise<AggregatedPastEvents> {
 	const { events: fromLuma, errors } = await aggregateFromLuma('past', 'past', PAST_EVENTS_PER_CHAPTER);
 
-	// Mais recentes primeiro; corta para a home nao virar um arquivo infinito.
 	const events = dedupeByLumaUrl([...manualPastEvents, ...fromLuma])
+		.filter(hasLocalThumbnail)
 		.sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))
 		.slice(0, MAX_PAST_EVENTS);
 

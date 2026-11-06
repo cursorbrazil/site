@@ -1,46 +1,40 @@
-import { BentoImage } from '@/lib/types';
+import type { BentoImage, EventAssetSrc } from '@/lib/types';
 
-// Fotos reais dos encontros da comunidade no Brasil. O layout dos slots fica
-// em bento-slots.ts; as fotos embaralham diariamente no servidor. Ao receber
-// fotos de outras cidades, adicione aqui (rode pnpm validate:bento depois).
-export const headerPhotoPool: BentoImage[] = [
+export const headerPhotoPool = [
 	{
-		src: '/images/events/aracaju-hero-01.jpg',
+		src: '/images/events/aracaju/hero/aracaju-hero-01.jpg',
 		alt: 'Foto de grupo da comunidade Cursor em um encontro em Aracaju',
 	},
 	{
-		src: '/images/events/aracaju-hero-02.jpg',
+		src: '/images/events/aracaju/hero/aracaju-hero-02.jpg',
 		alt: 'Participantes trabalhando juntos em um meetup Cursor em Aracaju',
 	},
 	{
-		src: '/images/events/canela-hero-03.jpg',
+		src: '/images/events/canela/hero/canela-hero-03.jpg',
 		alt: 'Palestrante respondendo perguntas no workshop Cursor em Canela',
 	},
 	{
-		src: '/images/events/aracaju-hero-04.jpg',
+		src: '/images/events/aracaju/hero/aracaju-hero-04.jpg',
 		alt: 'Palestrante falando com a comunidade em um encontro Cursor em Aracaju',
 	},
 	{
-		src: '/images/events/aracaju-hero-05.jpg',
+		src: '/images/events/aracaju/hero/aracaju-hero-05.jpg',
 		alt: 'Participante com o copo do Cursor durante um meetup em Aracaju',
 	},
 	{
-		src: '/images/events/aracaju-hero-06.jpg',
+		src: '/images/events/aracaju/hero/aracaju-hero-06.jpg',
 		alt: 'Camisetas do Cursor prontas para os participantes de um meetup em Aracaju',
 	},
 	{
-		src: '/images/events/canela-hero-02.jpg',
+		src: '/images/events/canela/hero/canela-hero-02.jpg',
 		alt: 'Palestrante no workshop da comunidade Cursor em Canela',
 	},
-	// Entrada duplicada de proposito: ocupa a posicao que era da foto do cafe
-	// de Floripa. Mesmo tamanho e ordem do pool preservam o sorteio diario dos
-	// demais quadrantes (o embaralhamento depende do indice de cada item).
 	{
-		src: '/images/events/aracaju-hero-05.jpg',
+		src: '/images/events/aracaju/hero/aracaju-hero-05.jpg',
 		alt: 'Participante com o copo do Cursor durante um meetup em Aracaju',
 	},
 	{
-		src: '/images/events/floripa-hero-02.jpg',
+		src: '/images/events/floripa/hero/floripa-hero-02.jpg',
 		alt: 'Foto de grupo da comunidade Cursor em um encontro em Florianópolis',
 	},
-];
+] satisfies EventAssetSrc<BentoImage>[];

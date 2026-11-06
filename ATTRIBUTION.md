@@ -23,7 +23,7 @@ Plain text equivalent:
 
 ## Photos and media
 
-- Hero / event slots under `public/images/events/` ship as **empty placeholders**. Replace them with your own chapter photos before launch.
+- Hero, world, and event photos live under `public/images/events/<city>/<album>/`. `<album>` is an event id, `hero`, or `world`.
 - Do **not** copy Athita’s photography (or other named Thailand event photos) from Cursor Thailand or older template versions without permission and on-site credit.
 - Partner logos and ambassador portraits should be your own assets.
 - `public/images/cursor-wallpaper-norham-sunrise.jpg` is J. M. W. Turner, _Norham Castle, Sunrise_ (c. 1845) — Wikimedia / public domain. Credit stays in the image `alt` text.
@@ -39,7 +39,7 @@ Plain text equivalent:
 
 - [ ] Edit `content/site.config.ts` (name, city, country, Luma, locales, description).
 - [ ] Set `NEXT_PUBLIC_SITE_URL` for production.
-- [ ] Replace placeholder images in `public/images/events/` (≥7 for the hero bento).
+- [ ] Replace placeholder images under `public/images/events/<city>/<album>/` (≥7 for the hero bento).
 - [ ] Replace ambassador photos, partner logos, and sample events/recaps.
 - [ ] Keep the template footer credit (or an equivalent visible line).
 - [ ] Optional: enable `sections.communityQuotes` after adding real quotes in `content/community-quotes.ts`.

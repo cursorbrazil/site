@@ -16,6 +16,32 @@ export interface CursorEvent {
 	host?: { name: string; logo: string; url?: string };
 }
 
+export type PhotoCity = 'aracaju' | 'canela' | 'floripa' | 'rio' | 'sp';
+
+export type EventAssetPath = `/images/events/${PhotoCity}/${string}/${string}.jpg`;
+
+export type LocalPublicPath = `/${string}`;
+
+export type PastEventWithLocalThumbnail = CursorEvent & {
+	thumbnail: LocalPublicPath;
+};
+
+export interface CuratedPastEvent
+	extends Omit<CursorEvent, 'thumbnail' | 'galleryImages' | 'status'> {
+	status: 'past';
+	thumbnail: EventAssetPath;
+	galleryImages?: EventAssetPath[];
+}
+
+export type EventAssetSrc<T extends { src: string }> = Omit<T, 'src'> & {
+	src: EventAssetPath;
+};
+
+export interface AggregatedPastEvents {
+	events: PastEventWithLocalThumbnail[];
+	errors: Array<{ chapterSlug: string; error: string }>;
+}
+
 export interface SocialLinks {
 	x?: string;
 	instagram?: string;

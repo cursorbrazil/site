@@ -1,11 +1,6 @@
-import { CursorEvent } from '@/lib/types';
+import type { CuratedPastEvent, CursorEvent } from '@/lib/types';
 
-// Eventos futuros chegam automaticamente dos calendarios Luma dos capitulos
-// (lib/events-source.ts). Este arquivo serve para:
-// 1. Curar um evento (entrada manual com a mesma lumaUrl vence o feed).
-// 2. Dar fotos reais e recap a eventos passados (thumbnail + galleryImages
-//    com 2 fotos viram colagem no card; recapPath linka a pagina de recap).
-export const events: CursorEvent[] = [
+export const pastEvents: CuratedPastEvent[] = [
 	{
 		id: 'cursor-meetup-rio-2026-07-11',
 		title: 'Cursor Meetup Rio de Janeiro',
@@ -13,8 +8,8 @@ export const events: CursorEvent[] = [
 		displayDate: '11 de julho de 2026',
 		location: 'Rio de Janeiro, RJ',
 		lumaUrl: 'https://luma.com/45jawdhf',
-		thumbnail: '/images/events/rio-2026-07-01.jpg',
-		galleryImages: ['/images/events/rio-2026-07-02.jpg'],
+		thumbnail: '/images/events/rio/cursor-meetup-rio-2026-07-11/rio-2026-07-01.jpg',
+		galleryImages: ['/images/events/rio/cursor-meetup-rio-2026-07-11/rio-2026-07-02.jpg'],
 		host: {
 			name: 'Cursor Rio de Janeiro',
 			logo: '/cursor-logo.svg',
@@ -29,8 +24,11 @@ export const events: CursorEvent[] = [
 		displayDate: '13 de maio de 2026',
 		location: 'São Paulo, SP',
 		lumaUrl: 'https://luma.com/zpur117k',
-		thumbnail: '/images/events/sp-2026-05-01.jpg',
-		galleryImages: ['/images/events/sp-2026-05-02.jpg', '/images/events/sp-2026-05-03.jpg'],
+		thumbnail: '/images/events/sp/cursor-meetup-sp-2026-05-13/sp-2026-05-01.jpg',
+		galleryImages: [
+			'/images/events/sp/cursor-meetup-sp-2026-05-13/sp-2026-05-02.jpg',
+			'/images/events/sp/cursor-meetup-sp-2026-05-13/sp-2026-05-03.jpg',
+		],
 		host: { name: 'Cursor São Paulo', logo: '/cursor-logo.svg', url: 'https://luma.com/cursor-sao-paulo' },
 		status: 'past',
 	},
@@ -41,8 +39,11 @@ export const events: CursorEvent[] = [
 		displayDate: '2 de maio de 2026',
 		location: 'Aracaju, SE',
 		lumaUrl: 'https://luma.com/7yj1r58x',
-		thumbnail: '/images/events/aracaju-2026-05-01.jpg',
-		galleryImages: ['/images/events/aracaju-2026-05-02.jpg', '/images/events/aracaju-2026-05-03.jpg'],
+		thumbnail: '/images/events/aracaju/cafe-cursor-aracaju-2026-05-02/aracaju-2026-05-01.jpg',
+		galleryImages: [
+			'/images/events/aracaju/cafe-cursor-aracaju-2026-05-02/aracaju-2026-05-02.jpg',
+			'/images/events/aracaju/cafe-cursor-aracaju-2026-05-02/aracaju-2026-05-03.jpg',
+		],
 		host: { name: 'Cursor Aracaju', logo: '/cursor-logo.svg', url: 'https://luma.com/cursor-aracaju-brazil' },
 		status: 'past',
 	},
@@ -53,8 +54,8 @@ export const events: CursorEvent[] = [
 		displayDate: '27 de abril de 2026',
 		location: 'Florianópolis, SC',
 		lumaUrl: 'https://luma.com/v2vit96w',
-		thumbnail: '/images/events/floripa-2026-04-01.jpg',
-		galleryImages: ['/images/events/floripa-2026-04-02.jpg'],
+		thumbnail: '/images/events/floripa/cursor-meetup-floripa-2026-04-27/floripa-2026-04-01.jpg',
+		galleryImages: ['/images/events/floripa/cursor-meetup-floripa-2026-04-27/floripa-2026-04-02.jpg'],
 		host: { name: 'Cursor Florianópolis', logo: '/cursor-logo.svg', url: 'https://luma.com/cursor-florianpolis' },
 		status: 'past',
 	},
@@ -65,8 +66,11 @@ export const events: CursorEvent[] = [
 		displayDate: '3 de julho de 2026',
 		location: 'Florianópolis, SC',
 		lumaUrl: 'https://luma.com/cursor-54mb',
-		thumbnail: '/images/events/floripa-2026-07-01.jpg',
-		galleryImages: ['/images/events/floripa-2026-07-02.jpg', '/images/events/floripa-2026-07-03.jpg'],
+		thumbnail: '/images/events/floripa/cursor-meetup-floripa-ufsc-2026-07-03/floripa-2026-07-01.jpg',
+		galleryImages: [
+			'/images/events/floripa/cursor-meetup-floripa-ufsc-2026-07-03/floripa-2026-07-02.jpg',
+			'/images/events/floripa/cursor-meetup-floripa-ufsc-2026-07-03/floripa-2026-07-03.jpg',
+		],
 		host: { name: 'Cursor Florianópolis', logo: '/cursor-logo.svg', url: 'https://luma.com/cursor-florianpolis' },
 		status: 'past',
 	},
@@ -77,8 +81,11 @@ export const events: CursorEvent[] = [
 		displayDate: '10 de julho de 2026',
 		location: 'Canela, RS',
 		lumaUrl: 'https://luma.com/cursor-vipo',
-		thumbnail: '/images/events/canela-2026-07-01.jpg',
-		galleryImages: ['/images/events/canela-2026-07-02.jpg', '/images/events/canela-2026-07-03.jpg'],
+		thumbnail: '/images/events/canela/cursor-workshop-canela-2026-07-10/canela-2026-07-01.jpg',
+		galleryImages: [
+			'/images/events/canela/cursor-workshop-canela-2026-07-10/canela-2026-07-02.jpg',
+			'/images/events/canela/cursor-workshop-canela-2026-07-10/canela-2026-07-03.jpg',
+		],
 		host: { name: 'Cursor Serra Gaúcha', logo: '/cursor-logo.svg', url: 'https://luma.com/cursor-serra-gaucha-brazil' },
 		status: 'past',
 	},
@@ -89,12 +96,14 @@ export const events: CursorEvent[] = [
 		displayDate: '11 de julho de 2026',
 		location: 'Aracaju, SE',
 		lumaUrl: 'https://luma.com/cursor-kviw',
-		thumbnail: '/images/events/aracaju-2026-07-01.jpg',
-		galleryImages: ['/images/events/aracaju-2026-07-02.jpg', '/images/events/aracaju-2026-07-04.jpg'],
+		thumbnail: '/images/events/aracaju/cursor-aracaju-2026-07-11/aracaju-2026-07-01.jpg',
+		galleryImages: [
+			'/images/events/aracaju/cursor-aracaju-2026-07-11/aracaju-2026-07-02.jpg',
+			'/images/events/aracaju/cursor-aracaju-2026-07-11/aracaju-2026-07-04.jpg',
+		],
 		host: { name: 'Cursor Aracaju', logo: '/cursor-logo.svg', url: 'https://luma.com/cursor-aracaju-brazil' },
 		status: 'past',
 	},
 ];
 
-export const upcomingEvents = events.filter((event) => event.status === 'upcoming');
-export const pastEvents = events.filter((event) => event.status === 'past');
+export const upcomingEvents: CursorEvent[] = [];
